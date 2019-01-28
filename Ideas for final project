@@ -1,0 +1,62 @@
+What is the best weekend of the year to have an outdoor party in Louisville?
+    assumptions:    
+            party will take place on Saturday or Sunday and on holiday mondays ex: labor day)
+                Monday Holidays to include:
+                        Washington's Birthday: third Monday in February (formerly February 22)
+                        Memorial Day: last Monday in May (formerly May 30)
+                        Labor Day: first Monday in September
+                        Columbus Day: second Monday in October (formerly observed in some states on October 12)
+                        Veterans Day: fourth Monday in October
+            Party will start after noon and end by 10 pm
+            ideal temperature range for the duration of the party : 65-80 degrees F
+            ideal humidity range from 75-80 deg F?
+            history of rain events during time frame is an indication of risk
+    methods: 
+            Calculate dates to pull, (104+5 dates)* 5 =  545 (104+5 dates)* 10 = 
+            pull weekend and monday holiday weather history from noon to 10pm (past 5 years? 10 years?)
+                humidity, temp range, precipitation, sunset
+            correspond weekend days with each other over past 5 years ex. Sat_one, Sun_one, Sat_two, Sun_two thru Sat_52
+            (Sat_one, {hi_temp:(25, 42, 38, 50, 21)}, {low_temp: (20, 35, 40, 10)]}, {precipitation: (yes, no, no, no, yes)
+            graphing
+                if hi-temp average > 80, or low_temp average < 65:
+                    don't graph
+                else display range, mean, average, precipitation events, and sunset_time
+                finally: highlight projected top five weekend days of 2019, 2020, and 2021, and their sunset times
+            scoring
+                top 5 weekend days by range and precipitation events
+                **How to score?**
+                    lowest precipitation events in time frame?
+                    or think bigger?
+                    
+
+   
+   0. pull weekend and holiday monday weather history for last 5 years(how much data is too much data for project?)
+        precipitation time frames from 11am-9am
+        temp
+        sunset
+        humidity
+    - set ideal conditions
+        temperature
+        sunset?
+        humidity ("real feel")
+        sunny or partly cloudy or overcast(but no rain)
+
+   
+   
+   
+   ideal temp range
+    Saturday, sunday 
+        2a or holiday-monday?
+    ideal time frame
+    preciptation history
+        precipitation time frames
+    humidity
+    air quality advisories
+    
+    2recycle for fire
+        include wind patterns
+        white rabbit spot
+    
+
+
+
