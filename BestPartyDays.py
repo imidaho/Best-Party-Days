@@ -11,31 +11,73 @@
     # Visualize the results of your analysis using Matplotlib, Seaborn, Bokeh or another Python Data Visualization library. Your results cannot be a plain text representation and you are encouraged to explore a visualization approach that clearly supports a conclusion/result of the analysis of your data.
     # Your data retrieval for visualization uses at least one SQL query, meaning you can't parse records from your data set using only Python or an ORM. Pushing and retrieving an entire dataframe to and from SQL also does not meet the requirement, e.g. the SQL query should not simply be SELECT * FROM database
     # Your project code is on your GitHub account in its own repository
-
+########## WORKIING CODE #########
 # import libraries:
 import requests
 import datetime
+# for get_potential_dates
+from datetime import date
+import calendar
 
-# create function to determine API request for each day needed for calculations- All saturdays, sundays, and holiday mondays, 12pm-10pm from 2008, 2018 [seperate script to do before-hand and create a json or csv?]
+
+DS_API_KEY = "00b999d3b38cbf3fd6f7c14b01244f79"
+LAT = "38.2535367"
+LONG = "-85.7481863"
+
+potential_dates = []
+this_day_in_time = []
+year = 2019
+
+def get_potential_dates(year):
+    c = calendar.TextCalendar(calendar.SUNDAY)
+    for m in range(1,13):
+        for i in c.itermonthdays(year,m):
+            if i != 0:                                      #calendar constructs months with leading zeros (days belongng to the previous month)
+                day = date(year,m,i)
+                if day.weekday() == 0:
+                    if m == 2 and 15<= i <= 21: #third Monday
+                        potential_dates.append("{}-0{}-{}, President's Day".format(year,m,i))
+                    if m == 5 and 25 <= i <=31: #last monday of May
+                        potential_dates.append("{}-0{}-{}, Memorial Day".format(year,m,i))
+                    if m == 9 and 1 <= i <=7: #1st Monday
+                        potential_dates.append("{}-0{}-{}, Labor Day".format(year,m,i))
+                    if m == 10 and 8 <= i <=14: #2nd Monday
+                        potential_dates.append("{}-{}-{}, Columbus Day*".format(year,m,i))
+                    if m == 10 and 22 <= i <=28: #4th Monday
+                    potential_dates.append("{}-{}-{}, Veterans Day".format(year,m,i))
+                if day.weekday() == 5 or day.weekday() == 6: #if its Saturday or Sunday
+                    if m < 10: # output needs to be YYYY-MM-DD
+                        if i < 10:
+                            potential_dates.append("{}-0{}-0{}".format(year,m,i))
+                        else:
+                            potential_dates.append("{}-0{}-{}".format(year,m,i))
+                    elif m > 9 and i <10:
+                        potential_dates.append("{}-{}-0{}".format(year,m,i))
+                    else:
+                        potential_dates.append("{}-{}-{}".format(year,m,i))
+
+
+def request_loop(list,year,years_back):
+    for target_day in list:
+        mm_dd = target_day[5:]
+        starting_year = int(year)- years_back
+        ending_year = int(year)-1
+        for year in range(starting_year, ending_year):
+            dark_sky_request = requests.get("https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT +"," + LONG + "," + str(year) + "-" + mm_dd + "T00:00:00?exclude=currently,flags,alerts")
+            this_day_in_time.append(dark_sky_request.json())
+
+
+get_potential_dates(year)
+request_loop(potential_dates,year,years_back)
+request_loop(test_list,2014,6)
+print(this_day_in_time)
+#rename when it's ready
+
 #####Need to watch json vids####
 
 
-def get_dates(range):
-    for dates in range:  # 2019
-        '''pick out days of calendar from 2008 through 2018 that are Saturdays, Sundays, and holiday mondays'''
-        # variable values must work with darksky api in some way
-        if date.day == Saturday or Sunday
-        '''store date.day in new variable'''
-        elif date.day ==  # third monday in februrary
-        '''store date.day in new variable called 3rd_feb_mon'''
-        elif date.day ==  # last monday in May
-        '''store date.day in new variable called may_last_mon'''
-        elif date.day ==  # second monday in october
-        '''store date.day in new variable called 2nd_oct_mon'''
-        elif date.day ==  # fourth monday in october
-        ''' store date.day in new variable called 4th_oct_mon'''
     #  Monday Holidays to include:
-    #                     Washington's Birthday: third Monday in February (formerly February 22)
+    #                     Presidents day: third Monday in February (formerly February 22)
     #                     Memorial Day: last Monday in May (formerly May 30)
     #                     Labor Day: first Monday in September
     #                     Columbus Day: second Monday in October (formerly observed in some states on October 12)
@@ -48,15 +90,25 @@ def get_dates(range):
 DS_API_KEY = "00b999d3b38cbf3fd6f7c14b01244f79"
 LAT = "38.2535367"
 LONG = "-85.7481863"
-year = "2008"
+#year = "2008"
 month = "01"
 day = "01"
 wknds_and_mons = ()
+trial_api_call = []
+
+
+def request_loop():
+    for date in range(2008, 2018):
+        dark_sky_request = requests.get("https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT +"," + LONG + "," + year + "-" + month + "-" + day + "T00:00:0?exclude=currently,flags,alerts")
+    trial_api_call.append(dark_sky_request.json())
+
+request_loop()
+
+print(trial_api_call)
 
 # TODO Loop that picks out selected dates and stores them in a tuple in the format needed for the API: YYYY-MM-DD
 # WORKING API REQUEST
-dark_sky_request = requests.get("https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT +
-                                "," + LONG + "," + year + "-" + month + "-" + day + "T00:00:01?exclude=currently,flags,alerts")
+dark_sky_request = requests.get("https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT +"," + LONG + "," + year + "-" + month + "-" + day + "T00:00:01?exclude=currently,flags,alerts")
 dark_sky_request.json()
 #####
 # TODO Loop requesting data by day.  approximately 1090 API requests needed.  API daily request max# is 1000
@@ -64,12 +116,11 @@ dark_sky_request.json()
 # TODO Function to convert Unix Time to User friendly format and rewrite that format into the txt file. Additionally, adjust time to show EST, not GMT.  ACCOUNT FOR DAYLIGHT SAVINGS
 
 
-def request_loop(tuple):
-    for date in tuple:
-        dark_sky_request = requests.get(
-            "https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT + "," + LONG + "," + date + " 00:00:01")
-        dark_sky_request.json()
-    # print to txt file
+def request_loop():
+    for date in range(2008, 2018):
+        dark_sky_request = requests.get("https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT +"," + LONG + "," + year + "-" + month + "-" + day + "T00:00:0?exclude=currently,flags,alerts")
+    trial_api_call.append(dark_sky_request.json())
+
 
 
 request_loop(wknds_and_mons)
