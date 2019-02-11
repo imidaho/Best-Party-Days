@@ -56,8 +56,8 @@ def get_potential_dates(year):
                         potential_dates.append(
                             "{}-{}-{}, Columbus Day*".format(year, m, i))
                     if m == 10 and 22 <= i <= 28:  # 4th Monday
-                    potential_dates.append(
-                        "{}-{}-{}, Veterans Day".format(year, m, i))
+                        potential_dates.append(
+                            "{}-{}-{}, Veterans Day".format(year, m, i))
                 if day.weekday() == 5 or day.weekday() == 6:  # if its Saturday or Sunday
                     if m < 10:  # output needs to be YYYY-MM-DD
                         if i < 10:
