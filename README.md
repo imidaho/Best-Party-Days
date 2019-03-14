@@ -6,7 +6,7 @@ The goal of this project is to predict the best (standard and extended) weekdend
 
 I have provided some code in my file that I had to use to get my data, but you will not need to run in order to test my project.  I have commented out the functions that you will need to call in order to spare your computer the demands on your RAM.  
 
-
+d
 
 My first step was to create a script to determine what dates in 2019 fell on a Saturday, a Sunday or a holiday Monday, format them to match the api call I will be using (Dark Sky), and store them in a list called 'potential_dates'.  I Then ran the list of potential dates to pull a range of 
 

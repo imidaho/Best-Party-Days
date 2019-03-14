@@ -72,33 +72,55 @@ def get_potential_dates(year):
                         potential_dates.append("{}-{}-{}".format(year, m, i))
 
 
-def request_loop(list, year, years_back):
+weather_dataframe = pd.DataFrame({'A' : []})
+
+
+def request_loop(list,year,years_back):
+    #pull out list item by index
     for target_day in list:
-        mm_dd = target_day[5:]
-        starting_year = int(year) - years_back
+        if len(target_day)> 10:
+            mm_dd = target_day[5:10]
+        else:
+            mm_dd = target_day[5:]
+        starting_year = int(year)- years_back
         ending_year = int(year)-1
         for year in range(starting_year, ending_year):
-            dark_sky_request = requests.get("https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT +
-                                            "," + LONG + "," + str(year) + "-" + mm_dd + "T00:00:00?exclude=currently,flags,alerts")
-            this_day_in_time.append(dark_sky_request.json())
+            dark_sky_request = requests.get("https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT +"," + LONG + "," + str(year) + "-" + mm_dd + "T00:00:00?exclude=currently,flags,alerts")
+            if target_day == '2019-01-05' and year == starting_year:
+                weather_dataframe = pd.DataFrame.from_dict(
+                    dark_sky_request.json()['hourly']['data'], orient= 'columns')
+            else:
+                weather_dataframe = weather_dataframe.append(
+                    pd.DataFrame.from_dict(
+                    dark_sky_request.json()['hourly']['data'], orient= 'columns'))
 
 
 get_potential_dates(year)
 request_loop(potential_dates, year, years_back)
 request_loop(test_list, 2014, 6)
 print(this_day_in_time)
-
+request_loop(potential_dates_1,2019,10)
+weather_dataframe
 
 #####Need to watch json vids####
 
 
-# TODO stores each desired day in a variable that we can use to call the dark sky API for historical weather data of that day
+# DONE stores each desired day in a variable that we can use to call the dark sky API for historical weather data of that day
 # TODO ask API to return data for that day and time slice.  Get:  Higest temp, lowest temp[possibly all hourly temps in range, which can be calculated to hi/lows after], and precipitation events, store in the variable ex: 2008_Sat_wk1 = ((year,month,day), (high temp: 40, low temp: 20, precipitation [before andor during timeslice?]: [bool or quant]))
-# TODO Loop requesting data by day.  approximately 1090 API requests needed.  API daily request max# is 1000
-# TODO Output of the above loop will store json data in txt file for later use.
-# TODO Function to convert Unix Time to User friendly format and rewrite that format into the txt file. Additionally, adjust time to show EST, not GMT.  ACCOUNT FOR DAYLIGHT SAVINGS
-# Take all aligning variables(ex: 2008_Sat_wk1, 2009_Sat_wk2, 2010_Sat_wk2, etc.) Create average high's and lows, max&min highs and lows and medians, [store in new variable?? or dict??]
-# TODO set desired temp high-low range-Start at 80-65 F- create input later
+# DONE Loop requesting data by day.  approximately 1090 API requests needed.  API daily request max# is 1000
+# DONE Output of the above loop will store json data in CSV file for later use.
+# TODO Function to convert Unix Time to User friendly format and rewrite that format into the txt file. 
+# DONE Additionally, adjust time to show EST, not GMT.  ACCOUNT FOR DAYLIGHT SAVINGS
+# TODO set index of table to time
+# TODO send CSV to sql database, 
+# TODO pull out hi-lows for each day by year
+# TODO count precipitation events on given day, and how much accumulated?
+# TODO create new table with avg highs and lows on given date and number of precipitation events for past 10 years
+    #index by MM-DD, columns: year, Hi, low, precipitation event
+    # OR by MM-DD, 2009 hi, 2009 low, etc. number of precipitation events, day of week in 2019, and holiday name (NaN if not?)
+
+# TODO set desired temp high-low range-Start at 80-60 F- create input later
 # TODO create graph of all variables with avg highs and lows within desired range
 # TODO show count of precipitation events
 # TODO highlight or create new graph with top five days with desired temp range, and least number of precipitation events
+# Take all aligning variables(ex: 2008_Sat_wk1, 2009_Sat_wk2, 2010_Sat_wk2, etc.) Create average high's and lows, max&min highs and lows and medians, [store in new variable?? or dict??]
