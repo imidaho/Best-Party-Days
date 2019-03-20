@@ -94,6 +94,30 @@ def request_loop(list,year,years_back):
                     pd.DataFrame.from_dict(
                     dark_sky_request.json()['hourly']['data'], orient= 'columns'))
 
+def request_loop(list,year,years_back):
+    starting_year = int(year)- years_back
+    ending_year = int(year)
+    #pull out list item by index
+    for target_day in list:
+        if len(target_day)> 10:
+            mm_dd = target_day[5:10]
+        else:
+            mm_dd = target_day[5:]
+        for year in range(starting_year, ending_year):
+            try:
+                dark_sky_request = requests.get("https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT +"," + LONG + "," + str(year) + "-" + mm_dd + "T00:00:00?exclude=currently,flags,alerts")
+                if target_day == '2019-01-05' and year == starting_year:
+                    weather_summary_dataframe = pd.DataFrame.from_dict(dark_sky_request.json()['daily']['data'], orient = 'columns')
+                    weather_summary_dataframe["MM_DD"]= mm-dd
+                    weather_summary_dataframe["Year"]= str(year)
+                else:
+                    weather_summary_dataframe = weather_summary_dataframe.append(pd.DataFrame.from_dict(dark_sky_request.json()['daily']['data'], orient = 'columns'))
+                    weather_summary_dataframe["MM_DD"]= weather_summary_dataframe["MM-DD"].append(mm_dd)
+                    weather_summary_dataframe["Year"]= weather_summary_dataframe["Year"].append(str(year))
+                print(str(year)+ '-' + mm_dd)
+                continue
+    weather_summary_dataframe.to_csv('weather_summary_dataframe.csv')
+    return weather_summary_dataframe
 
 get_potential_dates(year)
 request_loop(potential_dates, year, years_back)
