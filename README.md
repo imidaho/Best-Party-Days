@@ -4,12 +4,14 @@ My project answers the question:  "What weekend days or extended holiday weekend
 
 The goal of this project is to predict the best (standard and extended) weekdend days to host an outdoor party at Code Louisville Headquarters in 2019. So, in essence, I am assuming that this party will take place on either a Saturday, Sunday, or a Holiday Monday, such as Labor Day.  
 
-I have provided some code in my file that I had to use to get my data, but you will not need to run in order to test my project.  I have commented out the functions that you will need to call in order to spare your computer the demands on your RAM.  
 
 My first step was to create a script to determine what dates in 2019 fell on a Saturday, a Sunday or a holiday Monday, format them to match the api call I will be using (Dark Sky), and store them in a list called 'potential_dates'.  I Then ran the list of potential dates to pull weather summary data for Code Louisville Headquarters for the past ten years, and stored that data into a CSV and into a .db file.  
 
 I ran into some troubles with the datetime library and converting the Unix time to a MM-DD-YYY format, so I appended lists with those dates and years at the end of the loop to facilitate my sorting needs for visualization
 
+YOU DO NOT NEED TO RUN THE LOOP.  I've left it in the notebook so you can see it, and I kinda want to show it off.  BUT the .CSV file is already populated, so I've commented out the line that runs the loop. You can run the loop if you like, but it takes several minutes to finish (it'll cost me like 10 cents too :-) )
+
+The first graph shows the Saturdays, Sundays or Holidays that are on Mondays where the average high temps are below 80 degrees, and the average low temps stay above 50 degrees.  The second graph shows the number of times it has rained on the corresponding dates from the above graph for the past ten years.  
 
 Dependencies:
 import requests
