@@ -11,7 +11,13 @@ My first step was to create a script to determine what dates in 2019 fell on a S
 I ran into some troubles with the datetime library and converting the Unix time to a MM-DD-YYY format, so I appended lists with those dates and years at the end of the loop to facilitate my sorting needs for visualization
 
 
-
+Dependencies:
+import requests
+import pandas as pd
+import sqlite3
+from datetime import date
+import calendar
+import matplotlib.pyplot as plt
 
 
         # What question are you answering or problem are you analyzing
