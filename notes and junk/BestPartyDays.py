@@ -18,7 +18,7 @@ import datetime
 # for get_potential_dates
 from datetime import date
 import calendar
-
+import pandas as pd
 
 DS_API_KEY = "00b999d3b38cbf3fd6f7c14b01244f79"
 LAT = "38.2535367"
@@ -72,58 +72,66 @@ def get_potential_dates(year):
                         potential_dates.append("{}-{}-{}".format(year, m, i))
 
 
-weather_dataframe = pd.DataFrame({'A' : []})
+weather_dataframe = pd.DataFrame({'A': []})
 
 
-def request_loop(list,year,years_back):
-    #pull out list item by index
-    for target_day in list:
-        if len(target_day)> 10:
+def request_loop(date_list, year, years_back):
+    # pull out date_list item by index
+    for target_day in date_list:
+        if len(target_day) > 10:
             mm_dd = target_day[5:10]
         else:
             mm_dd = target_day[5:]
-        starting_year = int(year)- years_back
+        starting_year = int(year) - years_back
         ending_year = int(year)-1
         for year in range(starting_year, ending_year):
-            dark_sky_request = requests.get("https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT +"," + LONG + "," + str(year) + "-" + mm_dd + "T00:00:00?exclude=currently,flags,alerts")
+            dark_sky_request = requests.get("https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT +
+                                            "," + LONG + "," + str(year) + "-" + mm_dd + "T00:00:00?exclude=currently,flags,alerts")
             if target_day == '2019-01-05' and year == starting_year:
                 weather_dataframe = pd.DataFrame.from_dict(
-                    dark_sky_request.json()['hourly']['data'], orient= 'columns')
+                    dark_sky_request.json()['hourly']['data'], orient='columns')
             else:
                 weather_dataframe = weather_dataframe.append(
                     pd.DataFrame.from_dict(
-                    dark_sky_request.json()['hourly']['data'], orient= 'columns'))
+                        dark_sky_request.json()['hourly']['data'], orient='columns'))
 
-def request_loop(list,year,years_back):
-    starting_year = int(year)- years_back
+
+def request_loop(date_list, year, years_back):
+    starting_year = int(year) - years_back
     ending_year = int(year)
-    #pull out list item by index
-    for target_day in list:
-        if len(target_day)> 10:
+    # pull out date_list item by index
+    for target_day in date_list:
+        if len(target_day) > 10:
             mm_dd = target_day[5:10]
         else:
             mm_dd = target_day[5:]
         for year in range(starting_year, ending_year):
             try:
-                dark_sky_request = requests.get("https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT +"," + LONG + "," + str(year) + "-" + mm_dd + "T00:00:00?exclude=currently,flags,alerts")
-                if target_day == '2019-01-05' and year == starting_year:
-                    weather_summary_dataframe = pd.DataFrame.from_dict(dark_sky_request.json()['daily']['data'], orient = 'columns')
-                    weather_summary_dataframe["MM_DD"]= mm-dd
-                    weather_summary_dataframe["Year"]= str(year)
+                dark_sky_request = requests.get("https://api.darksky.net/forecast/" + DS_API_KEY + "/" + LAT +
+                                                "," + LONG + "," + str(year) + "-" + mm_dd + "T00:00:00?exclude=currently,flags,alerts")
+                if target_day == date_list[0] and year == starting_year:
+                    weather_summary_dataframe = pd.DataFrame.from_dict(
+                        dark_sky_request.json()['daily']['data'], orient='columns')
+                    weather_summary_dataframe["MM_DD"] = mm-dd
+                    weather_summary_dataframe["Year"] = str(year)
                 else:
-                    weather_summary_dataframe = weather_summary_dataframe.append(pd.DataFrame.from_dict(dark_sky_request.json()['daily']['data'], orient = 'columns'))
-                    weather_summary_dataframe["MM_DD"]= weather_summary_dataframe["MM-DD"].append(mm_dd)
-                    weather_summary_dataframe["Year"]= weather_summary_dataframe["Year"].append(str(year))
-                print(str(year)+ '-' + mm_dd)
+                    weather_summary_dataframe = weather_summary_dataframe.append(
+                        pd.DataFrame.from_dict(dark_sky_request.json()['daily']['data'], orient='columns'))
+                    weather_summary_dataframe["MM_DD"] = weather_summary_dataframe["MM-DD"].append(
+                        mm_dd)
+                    weather_summary_dataframe["Year"] = weather_summary_dataframe["Year"].append(
+                        str(year))
+                print(str(year) + '-' + mm_dd)
                 continue
     weather_summary_dataframe.to_csv('weather_summary_dataframe.csv')
     return weather_summary_dataframe
+
 
 get_potential_dates(year)
 request_loop(potential_dates, year, years_back)
 request_loop(test_list, 2014, 6)
 print(this_day_in_time)
-request_loop(potential_dates_1,2019,10)
+request_loop(potential_dates_1, 2019, 10)
 weather_dataframe
 
 #####Need to watch json vids####
@@ -133,15 +141,15 @@ weather_dataframe
 # TODO ask API to return data for that day and time slice.  Get:  Higest temp, lowest temp[possibly all hourly temps in range, which can be calculated to hi/lows after], and precipitation events, store in the variable ex: 2008_Sat_wk1 = ((year,month,day), (high temp: 40, low temp: 20, precipitation [before andor during timeslice?]: [bool or quant]))
 # DONE Loop requesting data by day.  approximately 1090 API requests needed.  API daily request max# is 1000
 # DONE Output of the above loop will store json data in CSV file for later use.
-# TODO Function to convert Unix Time to User friendly format and rewrite that format into the txt file. 
+# TODO Function to convert Unix Time to User friendly format and rewrite that format into the txt file.
 # DONE Additionally, adjust time to show EST, not GMT.  ACCOUNT FOR DAYLIGHT SAVINGS
 # TODO set index of table to time
-# TODO send CSV to sql database, 
+# TODO send CSV to sql database,
 # TODO pull out hi-lows for each day by year
 # TODO count precipitation events on given day, and how much accumulated?
 # TODO create new table with avg highs and lows on given date and number of precipitation events for past 10 years
-    #index by MM-DD, columns: year, Hi, low, precipitation event
-    # OR by MM-DD, 2009 hi, 2009 low, etc. number of precipitation events, day of week in 2019, and holiday name (NaN if not?)
+# index by MM-DD, columns: year, Hi, low, precipitation event
+# OR by MM-DD, 2009 hi, 2009 low, etc. number of precipitation events, day of week in 2019, and holiday name (NaN if not?)
 
 # TODO set desired temp high-low range-Start at 80-60 F- create input later
 # TODO create graph of all variables with avg highs and lows within desired range
