@@ -131,7 +131,7 @@ get_potential_dates(year)
 request_loop(potential_dates, year, years_back)
 request_loop(test_list, 2014, 6)
 print(this_day_in_time)
-request_loop(potential_dates_1, 2019, 10)
+request_loop(potential_dates, 2019, 10)
 weather_dataframe
 
 #####Need to watch json vids####
