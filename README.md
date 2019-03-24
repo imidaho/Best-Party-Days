@@ -10,7 +10,7 @@ I ran into some troubles with the datetime library and converting the Unix time 
 
 YOU DO NOT NEED TO RUN THE LOOP.  I've left it in the notebook so you can see it, and I kinda want to show it off.  BUT the .CSV file is already populated, so I've commented out the line that runs the loop. You can run the loop if you like, but it takes several minutes to finish (it'll cost me like 10 cents too if you run it for ten years of weather history :-) )
 
-The first graph shows the Saturdays, Sundays or Holidays that are on Mondays where the average high temps are below 80 degrees, and the average low temps stay above 50 degrees.  The second graph shows the number of times it has rained on the corresponding dates from the above graph for the past ten years.  
+The first graph shows the Saturdays, Sundays or Monday Holidays where the average high temps are below 80 degrees, and the average low temps stay above 50 degrees.  The second graph shows the number of times it has rained on the corresponding dates from the above graph for the past ten years.  
 
 Dependencies:
 requests
